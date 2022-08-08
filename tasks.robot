@@ -26,10 +26,9 @@ Order Robot From RobotSpareBin
         Fill the form    ${row}
         Preview the Robot
         Submit the order
-        Submit the order
         ${pdf}=    Store the reciept as a PDF file    ${row}[Order number]
-        ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
-        Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
+        #${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
+        #Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
         Go to order another robot
 
     END
@@ -63,8 +62,8 @@ Preview the Robot
     Click Button   preview
 
 Submit the order
-    Click Button    order
-    Wait Until Keyword Succeeds    1 min    1 sec    Submit the order
+    Click Button    id:order
+    Page Should Contain Element    id:receipt
 
 Store the reciept as a PDF file
     [Arguments]    ${Order number}
@@ -72,16 +71,16 @@ Store the reciept as a PDF file
     ${robot_preview_html}=    Get Element Attribute    id:reciept    outerHTML
     Html To Pdf    ${robot_preview_html}    ${PDF_OUTPUT_DIRECTORY}/${Order number}.pdf
 
-Take a screenshot of the robot
+#Take a screenshot of the robot
     [Arguments]    ${Order number}
     Screenshot    robot-preview-image    ${IMAGE_DIRECTORY}/${Order number}.png
     [Return]     ${IMAGE_DIRECTORY}/${Order number}.png
 
-Embed the robot screenshot to the receipt PDF file 
-    [Arguments]    ${IMAGE_DIRECTORY}    ${PDF_OUTPUT_DIRECTORY}
-    ${files}=    Create List    ${IMAGE_DIRECTORY}
-    ...    ${PDF_OUTPUT_DIRECTORY}
-    Add Files To PDF    ${files}    ${PDF_OUTPUT_DIRECTORY}    append=True
+#Embed the robot screenshot to the receipt PDF file 
+    [Arguments]    ${screenshot}    ${pdf}
+    ${files}=    Create List    ${screenshot}
+    ...    ${pdf}
+    Add Files To PDF    ${files}    ${pdf}    append=True
 
 Go to order another robot
     Click Button When Visible    id:order-another
