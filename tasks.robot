@@ -11,7 +11,8 @@ Library    RPA.Tables
 Library    RPA.PDF
 
 *** Variables ***
-${PDF_OUTPUT_DIRECTORY}  = {OUTPUT_DIR}${/}reciepts
+${PDF_OUTPUT_DIRECTORY}  = ${CURDIR}${/}output${/}reciepts
+${IMAGE_DIRECTORY}  = ${CURDIR}${/}output${/}_images
 
 *** Tasks ***
 Minimal task
@@ -27,7 +28,9 @@ Order Robot From RobotSpareBin
         Submit the order
         Submit the order
         ${pdf}=    Store the reciept as a PDF file    ${row}[Order number]
-        #${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
+        ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
+        Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
+        Go to order another robot
 
     END
 
@@ -69,7 +72,22 @@ Store the reciept as a PDF file
     ${robot_preview_html}=    Get Element Attribute    id:reciept    outerHTML
     Html To Pdf    ${robot_preview_html}    ${PDF_OUTPUT_DIRECTORY}/${Order number}.pdf
 
-#Take a screenshot of the robot
+Take a screenshot of the robot
+    [Arguments]    ${Order number}
+    Screenshot    robot-preview-image    ${IMAGE_DIRECTORY}/${Order number}.png
+    [Return]     ${IMAGE_DIRECTORY}/${Order number}.png
+
+Embed the robot screenshot to the receipt PDF file 
+    [Arguments]    ${IMAGE_DIRECTORY}    ${PDF_OUTPUT_DIRECTORY}
+    ${files}=    Create List    ${IMAGE_DIRECTORY}
+    ...    ${PDF_OUTPUT_DIRECTORY}
+    Add Files To PDF    ${files}    ${PDF_OUTPUT_DIRECTORY}    append=True
+
+Go to order another robot
+    Click Button When Visible    id:order-another
+
+
+
     
     
 
