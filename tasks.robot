@@ -10,6 +10,9 @@ Library    RPA.HTTP
 Library    RPA.Tables
 Library    RPA.PDF
 
+*** Variables ***
+${PDF_OUTPUT_DIRECTORY}  = {OUTPUT_DIR}${/}reciepts
+
 *** Tasks ***
 Minimal task
     Log    Done.
@@ -61,10 +64,10 @@ Submit the order
     Wait Until Keyword Succeeds    1 min    1 sec    Submit the order
 
 Store the reciept as a PDF file
-    [Arguments]    ${Order Number}
+    [Arguments]    ${Order number}
     Wait Until Element Is Visible    id:reciept
     ${robot_preview_html}=    Get Element Attribute    id:reciept    outerHTML
-    Html To Pdf    ${robot_preview_html}    ${OUTPUT_DIR}${/}${Order Number}.pdf
+    Html To Pdf    ${robot_preview_html}    ${PDF_OUTPUT_DIRECTORY}/${Order number}.pdf
 
 #Take a screenshot of the robot
     
