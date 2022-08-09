@@ -27,7 +27,7 @@ Order Robot From RobotSpareBin
         Preview the Robot
         Submit the order
         ${pdf}=    Store the reciept as a PDF file    ${row}[Order number]
-        #${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
+        ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
         #Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
         Go to order another robot
 
@@ -74,10 +74,10 @@ Store the reciept as a PDF file
     ${robot_preview_html}=    Get Element Attribute    id:receipt    outerHTML
     Html To Pdf    ${robot_preview_html}    ${OUTPUT_DIR}${/}receipts_${Order number}.pdf
 
-# #Take a screenshot of the robot
-#     [Arguments]    ${Order number}
-#     Screenshot    robot-preview-image    ${IMAGE_DIRECTORY}/${Order number}.png
-#     [Return]     ${IMAGE_DIRECTORY}/${Order number}.png
+Take a screenshot of the robot
+    [Arguments]    ${Order number}
+    Screenshot    robot-preview-image    ${OUTPUT_DIR}${/}image_${Order number}.png
+    [Return]     ${OUTPUT_DIR}${/}image_${Order number}.png
 
 # #Embed the robot screenshot to the receipt PDF file 
 #     [Arguments]    ${screenshot}    ${pdf}
