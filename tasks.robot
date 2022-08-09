@@ -9,6 +9,10 @@ Library    RPA.Browser
 Library    RPA.HTTP
 Library    RPA.Tables
 Library    RPA.PDF
+Library    RPA.Archive
+Library    RPA.Robocorp.Vault
+Library    RPA.Dialogs
+    
 
 *** Variables ***
 ${OUTPUT_DIRECTORY}  = ${CURDIR}${/}output${/}
@@ -28,11 +32,12 @@ Order Robot From RobotSpareBin
         Submit the order
         ${pdf}=    Store the reciept as a PDF file    ${row}[Order number]
         ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
-        #Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
+        Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
         Go to order another robot
-
     END
-
+    Create a Zip file for the reciept
+    Get data from user
+    Get site url from vault
 
 
 
@@ -73,21 +78,35 @@ Store the reciept as a PDF file
     Wait Until Element Is Visible    id:receipt
     ${robot_preview_html}=    Get Element Attribute    id:receipt    outerHTML
     Html To Pdf    ${robot_preview_html}    ${OUTPUT_DIR}${/}receipts_${Order number}.pdf
+    [Return]     ${OUTPUT_DIR}${/}receipts_${Order number}.pdf
 
 Take a screenshot of the robot
     [Arguments]    ${Order number}
     Screenshot    robot-preview-image    ${OUTPUT_DIR}${/}image_${Order number}.png
     [Return]     ${OUTPUT_DIR}${/}image_${Order number}.png
 
-# #Embed the robot screenshot to the receipt PDF file 
-#     [Arguments]    ${screenshot}    ${pdf}
-#     ${files}=    Create List    ${screenshot}
-#     ...    ${pdf}
-#     Add Files To PDF    ${files}    ${pdf}    append=True
-
+Embed the robot screenshot to the receipt PDF file 
+    [Arguments]    ${screenshot}    ${pdf}
+    #Open Pdf    ${pdf}
+    Log    ${pdf}
+    ${files}=    Create List    ${screenshot}
+    Add Files To PDF    ${files}    ${pdf}    append=True
+    #Close Pdf    ${pdf}
 
 Go to order another robot
     Click Button When Visible    id:order-another
+
+Create a Zip file for the reciept
+    Archive Folder With Zip     folder=${OUTPUT_DIR}    archive_name=orders_receipts.zip  include=*.pdf
+
+Get data from user
+    Add text input    csvFile    label=Please type your CSV file name
+    ${response}=    Run dialog    title=type: orders.csv
+    [Return]    ${response.csvFile}
+
+Get site url from vault
+    ${vault_data}=   Get Secret    vault_level2  
+    [Return]    ${vault_data}[csv_site_url]  
 
 
 
