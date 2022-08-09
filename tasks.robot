@@ -11,8 +11,8 @@ Library    RPA.Tables
 Library    RPA.PDF
 
 *** Variables ***
-${PDF_OUTPUT_DIRECTORY}  = ${CURDIR}${/}output${/}reciepts
-${IMAGE_DIRECTORY}  = ${CURDIR}${/}output${/}_images
+${OUTPUT_DIRECTORY}  = ${CURDIR}${/}output${/}
+
 
 *** Tasks ***
 Minimal task
@@ -62,25 +62,29 @@ Preview the Robot
     Click Button   preview
 
 Submit the order
+    Wait Until Keyword Succeeds    20x   1s   Submit Order and Assert for Receipt
+
+Submit Order and Assert for Receipt
     Click Button    id:order
     Page Should Contain Element    id:receipt
 
 Store the reciept as a PDF file
     [Arguments]    ${Order number}
-    Wait Until Element Is Visible    id:reciept
-    ${robot_preview_html}=    Get Element Attribute    id:reciept    outerHTML
-    Html To Pdf    ${robot_preview_html}    ${PDF_OUTPUT_DIRECTORY}/${Order number}.pdf
+    Wait Until Element Is Visible    id:receipt
+    ${robot_preview_html}=    Get Element Attribute    id:receipt    outerHTML
+    Html To Pdf    ${robot_preview_html}    ${OUTPUT_DIR}${/}receipts_${Order number}.pdf
 
-#Take a screenshot of the robot
-    [Arguments]    ${Order number}
-    Screenshot    robot-preview-image    ${IMAGE_DIRECTORY}/${Order number}.png
-    [Return]     ${IMAGE_DIRECTORY}/${Order number}.png
+# #Take a screenshot of the robot
+#     [Arguments]    ${Order number}
+#     Screenshot    robot-preview-image    ${IMAGE_DIRECTORY}/${Order number}.png
+#     [Return]     ${IMAGE_DIRECTORY}/${Order number}.png
 
-#Embed the robot screenshot to the receipt PDF file 
-    [Arguments]    ${screenshot}    ${pdf}
-    ${files}=    Create List    ${screenshot}
-    ...    ${pdf}
-    Add Files To PDF    ${files}    ${pdf}    append=True
+# #Embed the robot screenshot to the receipt PDF file 
+#     [Arguments]    ${screenshot}    ${pdf}
+#     ${files}=    Create List    ${screenshot}
+#     ...    ${pdf}
+#     Add Files To PDF    ${files}    ${pdf}    append=True
+
 
 Go to order another robot
     Click Button When Visible    id:order-another
