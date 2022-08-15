@@ -37,7 +37,7 @@ Order Robot From RobotSpareBin
     END
     Create a Zip file for the reciept
     Get data from user
-    Get site url from vault
+    #Get site url from vault
 
 
 
@@ -104,9 +104,9 @@ Get data from user
     ${response}=    Run dialog    title=type: orders.csv
     [Return]    ${response.csvFile}
 
-Get site url from vault
-    ${vault_data}=   Get Secret    vault_level2  
-    [Return]    ${vault_data}[csv_site_url]  
+# Get site url from vault
+#     ${vault_data}=   Get Secret    vault_level2  
+#     [Return]    ${vault_data}[csv_site_url]  
 
 
 
