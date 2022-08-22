@@ -36,7 +36,7 @@ Order Robot From RobotSpareBin
         Go to order another robot
     END
     Create a Zip file for the reciept
-    Get data from user
+    #Get data from user
     #Get site url from vault
 
 
@@ -98,15 +98,6 @@ Go to order another robot
 
 Create a Zip file for the reciept
     Archive Folder With Zip     folder=${OUTPUT_DIR}    archive_name=orders_receipts.zip  include=*.pdf
-
-Get data from user
-    Add text input    csvFile    label=Please type your CSV file name
-    ${response}=    Run dialog    title=type: orders.csv
-    [Return]    ${response.csvFile}
-
-# Get site url from vault
-#     ${vault_data}=   Get Secret    vault_level2  
-#     [Return]    ${vault_data}[csv_site_url]  
 
 
 
