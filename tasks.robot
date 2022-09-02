@@ -12,11 +12,15 @@ Library    RPA.PDF
 Library    RPA.Archive
 Library    RPA.Robocorp.Vault
 Library    RPA.Dialogs
+Library    RPA.Email.ImapSmtp    smtp_server = smtp.gmail.com    smtp_port = 587
     
 
 *** Variables ***
 ${OUTPUT_DIRECTORY}  = ${CURDIR}${/}output${/}
-
+${USERNAME}    jsbazman@gmail.com
+${PASSWORD}    #############
+${RECIPIENT}    jsbazmab@gmail.com
+@{ATTACHMENT}    ${OUTPUT_DIRECTORY}${/}orders_receipts.zip
 
 *** Tasks ***
 Minimal task
@@ -99,8 +103,10 @@ Go to order another robot
 Create a Zip file for the reciept
     Archive Folder With Zip     folder=${OUTPUT_DIR}    archive_name=orders_receipts.zip  include=*.pdf
 
-
-
+Send Email
+    Authorize    account=${USERNAME}    password=${PASSWORD}
+    Send Message    sender    recipients
+    
     
     
 
